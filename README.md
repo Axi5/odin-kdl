@@ -1,7 +1,9 @@
 # Build Instructions
 
 As a standalone package you can just run:
-Run `git clone --recurse-submodules https://github.com/Axi5/odin-kdl.git` to pull the repo
+```
+git clone --recurse-submodules https://github.com/Axi5/odin-kdl.git
+```
 
 To add to existing projects I recommend including this as a git submodule:
 ```
