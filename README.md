@@ -11,10 +11,11 @@ git submodule add https://github.com/Axi5/odin-kdl.git
 git submodule update --init --recursive
 ```
 
-The repo includes an odin build script however, the `ckdl` package is built using CMake so ensure you have a recent version installed and available in your environment.
-
-
-Run `odin run ./_build`
+You can build the ckdl binaries yourself following the instructions over at their [documentation page](https://ckdl.readthedocs.io/en/latest/index.html).
+However this repo includes an odin build script that calls the CMake commands for you, just run:
+```
+odin run ./_build
+```
 
 To build debug binaries add `-define:CONFIGURATION=Debug`, this is set to `Release` by default.
 To build statically add `-define:SHARED_LIB=OFF`
