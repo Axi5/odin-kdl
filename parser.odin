@@ -3,7 +3,7 @@ package kdl
 foreign import ckdl "kdl.lib"
 
 // Type of parser event
-kdl_event :: enum i32 {
+event :: enum i32 {
 	EOF         = 0, // regular end of file
 	PARSE_ERROR = 1, // parse error
 	START_NODE  = 2, // start of a node (a child node, if the previous node has not yet ended)
@@ -19,7 +19,7 @@ kdl_event :: enum i32 {
 }
 
 // Parser configuration
-kdl_parse_option :: enum i32 {
+parse_option :: enum i32 {
 	EMIT_COMMENTS  = 1,      // Emit comments (default: don't)
 	READ_VERSION_1 = 131072, // Use KDL version 1.0.0
 	READ_VERSION_2 = 262144, // Use KDL version 2.0.0
@@ -28,27 +28,27 @@ kdl_parse_option :: enum i32 {
 }
 
 // Full event structure
-kdl_event_data :: struct {
-	event: kdl_event, // What is the event?
-	name:  kdl_str,   // name of the node or property
-	value: kdl_value, // value including type annotation (for nodes: null with type annotation)
+event_data :: struct {
+	event: event, // What is the event?
+	name:  str,   // name of the node or property
+	value: value, // value including type annotation (for nodes: null with type annotation)
 }
 
-/* Opaque */ kdl_parser :: struct {}
+/* Opaque */ parser :: struct {}
 
-@(default_calling_convention="c", link_prefix="")
+@(default_calling_convention="c", link_prefix="kdl_")
 foreign ckdl {
 	// Create a parser that reads from a string
-	kdl_create_string_parser :: proc(doc: kdl_str, opt: kdl_parse_option) -> ^kdl_parser ---
+	create_string_parser :: proc(doc: str, opt: parse_option) -> ^parser ---
 
 	// Create a parser that reads data by calling a user-supplied function
-	kdl_create_stream_parser :: proc(read_func: kdl_read_func, user_data: rawptr, opt: kdl_parse_option) -> ^kdl_parser ---
+	create_stream_parser :: proc(read_func: read_func, user_data: rawptr, opt: parse_option) -> ^parser ---
 
 	// Destroy a parser
-	kdl_destroy_parser :: proc(parser: ^kdl_parser) ---
+	destroy_parser :: proc(parser: ^parser) ---
 
 	// Get the next parse event
 	// Returns a pointer to an event structure. The structure (including all strings it contains!) is
 	// invalidated on the next call.
-	kdl_parser_next_event :: proc(parser: ^kdl_parser) -> ^kdl_event_data ---
+	parser_next_event :: proc(parser: ^parser) -> ^event_data ---
 }

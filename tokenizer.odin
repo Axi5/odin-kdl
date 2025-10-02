@@ -3,14 +3,14 @@ package kdl
 foreign import ckdl "kdl.lib"
 
 // Return code for the tokenizer
-kdl_tokenizer_status :: enum i32 {
+tokenizer_status :: enum i32 {
 	OK,    // ok: token returned
 	EOF,   // regular end of file
 	ERROR, // error
 }
 
 // Type of token
-kdl_token_type :: enum i32 {
+token_type :: enum i32 {
 	START_TYPE,           // '('
 	END_TYPE,             // ')'
 	WORD,                 // identifier, number, boolean, or null
@@ -32,34 +32,34 @@ kdl_token_type :: enum i32 {
 }
 
 // Character set configuration
-kdl_character_set :: enum i32 {
+character_set :: enum i32 {
 	V1      = 1, // V1 character set: BOM is whitespace, vertical tab is not, etc.
 	V2      = 2, // V2 character set: control characters restricted, etc.
 	DEFAULT = 2,
 }
 
 // A token, consisting of a token type and token text
-kdl_token :: struct {
-	type:  kdl_token_type,
-	value: kdl_str,
+token :: struct {
+	type:  token_type,
+	value: str,
 }
 
-/* Opaque */ kdl_tokenizer :: struct {}
+/* Opaque */ tokenizer :: struct {}
 
 @(default_calling_convention="c", link_prefix="")
 foreign ckdl {
 	// Create a tokenizer that reads from a string
-	kdl_create_string_tokenizer :: proc(doc: kdl_str) -> ^kdl_tokenizer ---
+	create_string_tokenizer :: proc(doc: str) -> ^tokenizer ---
 
 	// Create a tokenizer that reads data by calling a user-supplied function
-	kdl_create_stream_tokenizer :: proc(read_func: kdl_read_func, user_data: rawptr) -> ^kdl_tokenizer ---
+	create_stream_tokenizer :: proc(read_func: read_func, user_data: rawptr) -> ^tokenizer ---
 
 	// Destroy a tokenizer
-	kdl_destroy_tokenizer :: proc(tokenizer: ^kdl_tokenizer) ---
+	destroy_tokenizer :: proc(tokenizer: ^tokenizer) ---
 
 	// Change the character set used by the tokenizer
-	kdl_tokenizer_set_character_set :: proc(tokenizer: ^kdl_tokenizer, cs: kdl_character_set) ---
+	tokenizer_set_character_set :: proc(tokenizer: ^tokenizer, cs: character_set) ---
 
 	// Get the next token and write it to a user-supplied structure (or return an error)
-	kdl_pop_token :: proc(tokenizer: ^kdl_tokenizer, dest: ^kdl_token) -> kdl_tokenizer_status ---
+	pop_token :: proc(tokenizer: ^tokenizer, dest: ^token) -> tokenizer_status ---
 }
